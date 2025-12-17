@@ -956,6 +956,18 @@ html.admin-mode .admin-only {
       .header {
             padding: 0 24px;
       }
+
+      .calendar-grid {
+            padding: 12px;
+      }
+
+      .section-title {
+            font-size: 22px;
+      }
+
+      .section-subtitle {
+            font-size: 13px;
+      }
 }
 
 @media (max-width: 768px) {
@@ -966,10 +978,11 @@ html.admin-mode .admin-only {
       .sidebar {
             width: 100%;
             height: auto;
-            max-height: 250px;
+            max-height: 300px;
             position: relative;
             border-right: none;
             border-bottom: 1px solid var(--border-light);
+            overflow-y: auto;
       }
 
       .sidebar-content {
@@ -983,6 +996,14 @@ html.admin-mode .admin-only {
             margin-bottom: 0;
       }
 
+      .sidebar-card {
+            padding: 12px;
+      }
+
+      .sidebar-card-value {
+            font-size: 14px;
+      }
+
       .main-content {
             flex: 1;
       }
@@ -993,19 +1014,26 @@ html.admin-mode .admin-only {
 
       .header {
             padding: 0 16px;
+            height: 50px;
+      }
+
+      .header-title {
+            font-size: 16px;
       }
 
       .calendar-grid {
-            padding: 16px;
+            padding: 12px;
       }
 
       .day-cell {
             font-size: 12px;
+            min-height: 40px;
       }
 
       .modal {
             padding: 24px;
             margin: 16px;
+            max-width: calc(100vw - 32px);
       }
 
       .modal-buttons {
@@ -1013,36 +1041,69 @@ html.admin-mode .admin-only {
       }
 
       .hours-grid {
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+      }
+
+      .hour-option {
+            font-size: 13px;
+            padding: 10px;
       }
 
       .section-title {
-            font-size: 24px;
+            font-size: 20px;
       }
 
       .section-subtitle {
-            font-size: 15px;
+            font-size: 14px;
+      }
+
+      .appointment-actions {
+            flex-wrap: wrap;
+      }
+
+      .btn-contact-client {
+            font-size: 11px;
+            padding: 6px 10px;
+      }
+
+      .stat-badge {
+            font-size: 12px;
+            padding: 6px 12px;
       }
 }
 
 @media (max-width: 480px) {
+      .sidebar {
+            max-height: 250px;
+      }
+
       .sidebar-content {
             grid-template-columns: 1fr;
             gap: 12px;
+            padding: 12px;
       }
 
       .sidebar-section {
-            padding: 12px;
+            padding: 8px;
+      }
+
+      .sidebar-card {
+            padding: 10px;
+      }
+
+      .sidebar-card-value {
+            font-size: 13px;
       }
 
       .day-cell {
             font-size: 11px;
-            padding: 8px;
+            min-height: 35px;
       }
 
       .hour-option {
             font-size: 12px;
-            padding: 8px 12px;
+            padding: 8px;
       }
 
       .modal {
@@ -1050,31 +1111,109 @@ html.admin-mode .admin-only {
             margin: 8px;
       }
 
+      .modal-title {
+            font-size: 18px;
+      }
+
       .form-group label {
-            font-size: 14px;
+            font-size: 13px;
       }
 
       .btn {
+            font-size: 13px;
+            padding: 10px 14px;
+      }
+
+      .appointment-meta {
+            flex-direction: column;
+            gap: 6px;
+      }
+
+      .appointment-actions {
+            gap: 6px;
+      }
+
+      .btn-contact-client {
+            font-size: 10px;
+            padding: 5px 8px;
+      }
+
+      .header-controls {
+            gap: 8px;
+      }
+
+      .stat-badge {
+            font-size: 11px;
+            padding: 5px 10px;
+      }
+
+      .calendar-controls {
+            flex-direction: column;
+            gap: 12px;
+      }
+
+      .month-navigation {
             font-size: 14px;
-            padding: 10px 16px;
+      }
+
+      .nav-button {
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
       }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-      width: 8px;
-}
+@media (max-width: 360px) {
+      .sidebar {
+            max-height: 200px;
+      }
 
-::-webkit-scrollbar-track {
-      background: var(--surface-light);
-}
+      .sidebar-content {
+            padding: 8px;
+      }
 
-::-webkit-scrollbar-thumb {
-      background: var(--border-light);
-      border-radius: 4px;
-}
+      .sidebar-card {
+            padding: 8px;
+      }
 
-::-webkit-scrollbar-thumb:hover {
-      background: var(--text-light);
-      opacity: 0.5;
+      .day-cell {
+            font-size: 10px;
+            min-height: 30px;
+      }
+
+      .hour-option {
+            font-size: 11px;
+            padding: 6px;
+      }
+
+      .modal {
+            padding: 12px;
+      }
+
+      .modal-title {
+            font-size: 16px;
+      }
+
+      .form-group input,
+      .form-group textarea {
+            font-size: 12px;
+            padding: 8px 10px;
+      }
+
+      .btn {
+            font-size: 12px;
+            padding: 8px 12px;
+      }
+
+      .appointment-name {
+            font-size: 13px;
+      }
+
+      .appointment-meta {
+            font-size: 11px;
+      }
+
+      .header-title {
+            font-size: 14px;
+      }
 }
