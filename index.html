@@ -99,17 +99,20 @@
           </div>
           <div class="sidebar-card empty" id="bookingSummary">Nada selecionado</div>
         </div>
-      </div>
 
-      <div class="sidebar-actions">
-        <button class="btn btn-primary btn-small" id="confirmBookingBtn" disabled>
-          <i class="fa-solid fa-check" aria-hidden></i>
-          Confirmar Agendamento
-        </button>
-        <button class="btn btn-outline btn-small" id="resetBtn">
-          <i class="fa-solid fa-rotate-left" aria-hidden></i>
-          Limpar Seleção
-        </button>
+        <!-- Actions -->
+        <div class="sidebar-section">
+          <div class="sidebar-actions-inline">
+            <button class="btn btn-primary btn-small" id="confirmBookingBtn" disabled>
+              <i class="fa-solid fa-check" aria-hidden></i>
+              Confirmar Agendamento
+            </button>
+            <button class="btn btn-outline btn-small" id="resetBtn">
+              <i class="fa-solid fa-rotate-left" aria-hidden></i>
+              Limpar Seleção
+            </button>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -171,6 +174,61 @@
         </section>
 
         <!-- Appointments List -->
+
+        <div class="mobile-sidebar-content">
+          <!-- Selected Date Info -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">
+              <i class="fa-solid fa-calendar" aria-hidden></i>
+              Data Selecionada
+            </div>
+            <div class="sidebar-card empty" id="selectedDateCardMobile">Selecione uma data</div>
+          </div>
+
+          <!-- Selected Hour Info -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">
+              <i class="fa-solid fa-clock" aria-hidden></i>
+              Horário
+            </div>
+            <div class="sidebar-card empty" id="selectedHourCardMobile">Selecione um horário</div>
+          </div>
+
+          <!-- Available Hours Preview -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">
+              <i class="fa-solid fa-location-dot" aria-hidden></i>
+              Horários Disponíveis
+            </div>
+            <div class="sidebar-card" id="availableHoursPreviewMobile">
+              <div class="text-small">Selecione uma data para ver horários disponíveis</div>
+            </div>
+          </div>
+
+          <!-- Booking Summary -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">
+              <i class="fa-solid fa-clipboard" aria-hidden></i>
+              Resumo do Agendamento
+            </div>
+            <div class="sidebar-card empty" id="bookingSummaryMobile">Nada selecionado</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="sidebar-section">
+            <div class="sidebar-actions-inline">
+              <button class="btn btn-primary btn-small" id="confirmBookingBtnMobile" disabled>
+                <i class="fa-solid fa-check" aria-hidden></i>
+                Confirmar Agendamento
+              </button>
+              <button class="btn btn-outline btn-small" id="resetBtnMobile">
+                <i class="fa-solid fa-rotate-left" aria-hidden></i>
+                Limpar Seleção
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="appointments-list">
           <div class="appointments-list-title">
             <i class="fa-solid fa-calendar-days" aria-hidden></i>
@@ -320,6 +378,10 @@
         "16:00",
         "16:30",
         "17:00",
+        "17:30",
+        "18:00",
+        "18:30",
+        "19:00",
       ];
 
       // ========== APPOINTMENT FACTORY & HELPERS ==========
@@ -727,6 +789,12 @@
         const summaryCard = document.getElementById("bookingSummary");
         const confirmBtn = document.getElementById("confirmBookingBtn");
 
+        const dateCardMobile = document.getElementById("selectedDateCardMobile");
+        const hourCardMobile = document.getElementById("selectedHourCardMobile");
+        const previewCardMobile = document.getElementById("availableHoursPreviewMobile");
+        const summaryCardMobile = document.getElementById("bookingSummaryMobile");
+        const confirmBtnMobile = document.getElementById("confirmBookingBtnMobile");
+
         if (selectedDate) {
           const dateStr = selectedDate.toLocaleDateString("pt-BR", {
             weekday: "long",
@@ -735,36 +803,90 @@
             day: "numeric",
           });
 
-          dateCard.innerHTML = `<div class="sidebar-card-label">Data</div><div class="sidebar-card-value">${dateStr}</div>`;
-          dateCard.classList.remove("empty");
+          const dateContent = `<div class="sidebar-card-label">Data</div><div class="sidebar-card-value">${dateStr}</div>`;
+          if (dateCard) {
+            dateCard.innerHTML = dateContent;
+            dateCard.classList.remove("empty");
+          }
+          if (dateCardMobile) {
+            dateCardMobile.innerHTML = dateContent;
+            dateCardMobile.classList.remove("empty");
+          }
 
           const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
           const bookedThisDay = bookedHours[dateKey] || [];
           const availableCount = availableHours.length - bookedThisDay.length;
 
-          previewCard.innerHTML = `<div class="sidebar-card-label">Horários disponíveis para ${dateStr}</div><div class="sidebar-card-value" style="font-size: 13px; margin-top: 8px;">${availableCount} horários <br><span style="font-size: 11px; opacity: 0.6;">disponíveis neste dia</span></div>`;
+          const previewContent = `<div class="sidebar-card-label">Horários disponíveis para ${dateStr}</div><div class="sidebar-card-value" style="font-size: 13px; margin-top: 8px;">${availableCount} horários <br><span style="font-size: 11px; opacity: 0.6;">disponíveis neste dia</span></div>`;
+          if (previewCard) previewCard.innerHTML = previewContent;
+          if (previewCardMobile) previewCardMobile.innerHTML = previewContent;
 
           if (selectedHour) {
-            hourCard.innerHTML = `<div class="sidebar-card-label">Horário</div><div class="sidebar-card-value">${selectedHour}</div>`;
-            hourCard.classList.remove("empty");
+            const hourContent = `<div class="sidebar-card-label">Horário</div><div class="sidebar-card-value">${selectedHour}</div>`;
+            if (hourCard) {
+              hourCard.innerHTML = hourContent;
+              hourCard.classList.remove("empty");
+            }
+            if (hourCardMobile) {
+              hourCardMobile.innerHTML = hourContent;
+              hourCardMobile.classList.remove("empty");
+            }
 
-            summaryCard.innerHTML = `<div class="sidebar-card-label">Data & Hora</div><div class="sidebar-card-value">${dateStr} às ${selectedHour}</div>`;
-            summaryCard.classList.remove("empty");
+            const summaryContent = `<div class="sidebar-card-label">Data & Hora</div><div class="sidebar-card-value">${dateStr} às ${selectedHour}</div>`;
+            if (summaryCard) {
+              summaryCard.innerHTML = summaryContent;
+              summaryCard.classList.remove("empty");
+            }
+            if (summaryCardMobile) {
+              summaryCardMobile.innerHTML = summaryContent;
+              summaryCardMobile.classList.remove("empty");
+            }
 
-            confirmBtn.disabled = false;
+            if (confirmBtn) confirmBtn.disabled = false;
+            if (confirmBtnMobile) confirmBtnMobile.disabled = false;
           } else {
-            hourCard.innerHTML = "Selecione um horário";
-            hourCard.classList.add("empty");
-            confirmBtn.disabled = true;
+            const emptyHour = "Selecione um horário";
+            if (hourCard) {
+              hourCard.innerHTML = emptyHour;
+              hourCard.classList.add("empty");
+            }
+            if (hourCardMobile) {
+              hourCardMobile.innerHTML = emptyHour;
+              hourCardMobile.classList.add("empty");
+            }
+            if (confirmBtn) confirmBtn.disabled = true;
+            if (confirmBtnMobile) confirmBtnMobile.disabled = true;
           }
         } else {
-          dateCard.innerHTML = "Selecione uma data";
-          dateCard.classList.add("empty");
-          hourCard.innerHTML = "Selecione um horário";
-          hourCard.classList.add("empty");
-          summaryCard.innerHTML = "Nada selecionado";
-          summaryCard.classList.add("empty");
-          confirmBtn.disabled = true;
+          const emptyDate = "Selecione uma data";
+          if (dateCard) {
+            dateCard.innerHTML = emptyDate;
+            dateCard.classList.add("empty");
+          }
+          if (dateCardMobile) {
+            dateCardMobile.innerHTML = emptyDate;
+            dateCardMobile.classList.add("empty");
+          }
+          const emptyHour = "Selecione um horário";
+          if (hourCard) {
+            hourCard.innerHTML = emptyHour;
+            hourCard.classList.add("empty");
+          }
+          if (hourCardMobile) {
+            hourCardMobile.innerHTML = emptyHour;
+            hourCardMobile.classList.add("empty");
+          }
+          const emptySummary = "Nada selecionado";
+          if (summaryCard) {
+            summaryCard.innerHTML = emptySummary;
+            summaryCard.classList.add("empty");
+          }
+          if (summaryCardMobile) {
+            summaryCardMobile.innerHTML = emptySummary;
+            summaryCardMobile.classList.add("empty");
+          }
+          if (confirmBtn) confirmBtn.disabled = true;
+          if (confirmBtnMobile) confirmBtnMobile.disabled = true;
         }
       }
 
@@ -1240,7 +1362,9 @@
         document.getElementById("appointmentForm").addEventListener("submit", handleFormSubmit);
 
         document.getElementById("confirmBookingBtn").addEventListener("click", openModal);
+        document.getElementById("confirmBookingBtnMobile").addEventListener("click", openModal);
         document.getElementById("resetBtn").addEventListener("click", resetSelection);
+        document.getElementById("resetBtnMobile").addEventListener("click", resetSelection);
 
         document.getElementById("modalOverlay").addEventListener("click", (e) => {
           if (e.target.id === "modalOverlay") {

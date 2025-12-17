@@ -84,7 +84,7 @@ body {
 }
 
 .sidebar-logo {
-      font-size: 15px;
+      font-size: 30px;
       font-weight: 600;
       letter-spacing: 0px;
       color: var(--text-light);
@@ -139,12 +139,28 @@ body {
       line-height: 1.4;
 }
 
-.sidebar-actions {
-      padding: 20px;
-      border-top: 1px solid var(--border-light);
+.sidebar-actions-inline {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-light);
+}
+
+.mobile-header {
+      display: none;
+      padding: 28px 24px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+}
+
+.mobile-sidebar-content {
+      display: none;
+      padding: 28px 20px;
+      overflow-y: auto;
 }
 
 .btn-small {
@@ -695,7 +711,14 @@ html.dark-mode .btn-contact-client:hover {
 
 .hour-option:hover:not(.unavailable) {
       border-color: var(--accent);
-      background: white;
+      color: #000;
+      background: rgba(255, 255, 255, 0);
+}
+
+html.dark-mode  .hour-option:hover:not(.unavailable) {
+      border-color: var(--accent);
+      background: var(--bg-dark);
+      color:#fff; ;
 }
 
 .hour-option.selected {
@@ -872,11 +895,22 @@ html.dark-mode .btn-contact-client:hover {
 
 .btn-primary {
       background: var(--text-light);
-      color: white;
+      color: rgb(255, 255, 255);
 }
 
 .btn-primary:hover {
       background: var(--accent);
+      color: #ffffff;
+}
+
+html.dark-mode .btn-primary {
+      background: var(--text-dark);
+      color: #000000;
+}
+
+html.dark-mode .btn-primary:hover {
+      background: var(--accent);
+      color: #ffffff;
 }
 
 .btn-outline {
@@ -978,6 +1012,7 @@ html.admin-mode .admin-only {
       .sidebar {
             width: 100%;
             height: auto;
+            margin-top: 20px;
             max-height: 300px;
             position: relative;
             border-right: none;
@@ -1002,6 +1037,29 @@ html.admin-mode .admin-only {
 
       .sidebar-card-value {
             font-size: 14px;
+      }
+
+      .sidebar-actions-inline {
+            grid-column: span 2;
+            flex-direction: row;
+            justify-content: center;
+      }
+
+      .mobile-header {
+            display: block;
+      }
+
+      .mobile-sidebar-content {
+            display: block;
+            margin-top: 32px;
+      }
+
+      .header {
+            display: none;
+      }
+
+      .sidebar-content {
+            display: none;
       }
 
       .main-content {
@@ -1153,7 +1211,7 @@ html.admin-mode .admin-only {
       }
 
       .month-navigation {
-            font-size: 14px;
+            font-size: 18px;
       }
 
       .nav-button {
