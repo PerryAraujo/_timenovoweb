@@ -320,7 +320,7 @@
               <div class="sidebar-card empty" id="bookingSummaryMobile">Nada selecionado</div>
             </div>
 
-            <div class="sidebar-section">
+            <div class="sidebar-section admin-only">
               <div class="sidebar-section-title">
                 <i class="fa-solid fa-calendar-days" aria-hidden></i>
                 Próximos Agendamentos
@@ -343,8 +343,8 @@
             </div>
           </div>
 
-          <!-- Lista de Agendamentos (página "Agendamentos") — oculta por padrão -->
-          <div class="appointments-list" id="appointmentsListWrapper">
+          <!-- Lista de Agendamentos (página "Agendamentos") — oculta por padrão, só admin acessa -->
+          <div class="appointments-list hidden" id="appointmentsListWrapper">
             <div class="appointments-list-title">
               <i class="fa-solid fa-calendar-days" aria-hidden></i>
               Agendamentos
@@ -373,7 +373,7 @@
             </div>
           </div>
 
-          <!-- Página de Resumo (padrão VISO) — oculta por padrão -->
+          <!-- Página de Resumo — oculta por padrão, só admin acessa -->
           <div id="resumoPage" class="resumo-page hidden">
             <div class="resumo-header">
               <div>
@@ -726,6 +726,9 @@
       // ========== NAVEGAÇÃO DE PÁGINAS (padrão VISO) ==========
 
       function navigatePage(page) {
+        // Guard: modo cliente não pode acessar páginas exclusivas de admin
+        if (!isAdmin && page !== "agendar") return;
+
         currentPage = page;
 
         const calendarSection = document.querySelector(".calendar-section");
@@ -735,7 +738,7 @@
         const mobileSidebarContent = document.querySelector(".mobile-sidebar-content");
 
         if (calendarSection) calendarSection.classList.toggle("hidden", page !== "agendar");
-        if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo");
+        if (listWrapper) listWrapper.classList.toggle("hidden", page !== "lista");
         if (resumoPage) resumoPage.classList.toggle("hidden", page !== "resumo");
         if (bookingActions) bookingActions.classList.toggle("hidden", page !== "agendar");
         // Mobile: mostra o painel de seleção apenas na aba Agendar

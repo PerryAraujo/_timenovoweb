@@ -1707,6 +1707,12 @@ html.admin-mode .admin-only {
       display: inline-flex !important;
 }
 
+/* Elementos de bloco (div, section) admin-only precisam de display:block, não inline-flex */
+html.admin-mode div.admin-only,
+html.admin-mode section.admin-only {
+      display: block !important;
+}
+
 /* ========== SCROLLBAR GLOBAL ========== */
 ::-webkit-scrollbar {
       width: 8px;
@@ -2884,4 +2890,22 @@ html.dark-mode .resumo-project-name {
             max-width: calc(100vw - 24px);
             padding: 20px;
       }
+}
+
+/* ===================================================================
+   MODO CLIENTE (html sem .admin-mode)
+   Sidebar completamente oculta — cliente só vê o calendário/agendamento
+   =================================================================== */
+html:not(.admin-mode) .sidebar,
+html:not(.admin-mode) .sidebar-overlay {
+      display: none !important;
+}
+
+html:not(.admin-mode) .sidebar-mobile-toggle {
+      display: none !important;
+}
+
+/* Mostra logo no header em modo cliente (sem sidebar para branding) */
+html:not(.admin-mode) .header-mobile-logo {
+      display: flex !important;
 }
