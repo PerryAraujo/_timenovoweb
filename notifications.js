@@ -142,16 +142,27 @@
   }
 
   function showTemporaryNotice(msg) {
+    // Usa a função showToast do design system NovoWeb se disponível
+    if (typeof window.showToast === "function") {
+      window.showToast(msg);
+      return;
+    }
+    // Implementação inline conforme design system (transform + opacity apenas)
     const notice = document.createElement("div");
     notice.className = "notify-temp-notice";
     notice.textContent = msg;
     document.body.appendChild(notice);
-    setTimeout(() => {
+    requestAnimationFrame(function () {
       notice.classList.add("visible");
-    }, 10);
-    setTimeout(() => {
+    });
+    setTimeout(function () {
       notice.classList.remove("visible");
-      setTimeout(() => document.body.removeChild(notice), 300);
+      setTimeout(function () {
+        if (notice.parentNode) notice.parentNode.removeChild(notice);
+      }, 300);
     }, 3500);
   }
+
+  // Expõe showToast globalmente para que o inline script do index.html possa usá-lo
+  window.showToast = showTemporaryNotice;
 })();
