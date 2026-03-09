@@ -303,6 +303,10 @@
               <div class="sidebar-card" id="availableHoursPreviewMobile">
                 <div class="text-small">Selecione uma data para ver horários disponíveis</div>
               </div>
+              <div class="available-hours hidden" id="availableHoursContainerMobile">
+                <div class="hours-label" id="hoursLabelMobile"></div>
+                <div class="hours-grid" id="hoursGridMobile"></div>
+              </div>
             </div>
 
             <!-- Booking Summary -->
@@ -1200,6 +1204,9 @@
         const container = document.getElementById("availableHoursContainer");
         const grid = document.getElementById("hoursGrid");
         const label = document.getElementById("hoursLabel");
+        const containerMobile = document.getElementById("availableHoursContainerMobile");
+        const gridMobile = document.getElementById("hoursGridMobile");
+        const labelMobile = document.getElementById("hoursLabelMobile");
 
         const dateStr = selectedDate.toLocaleDateString("pt-BR", {
           weekday: "long",
@@ -1208,8 +1215,11 @@
           day: "numeric",
         });
 
-        label.innerHTML = `<i class="fa-solid fa-calendar" aria-hidden></i> Horários disponíveis para ${dateStr}:`;
+        const labelHtml = `<i class="fa-solid fa-calendar" aria-hidden></i> Horários disponíveis para ${dateStr}:`;
+        label.innerHTML = labelHtml;
         grid.innerHTML = "";
+        if (labelMobile) labelMobile.innerHTML = labelHtml;
+        if (gridMobile) gridMobile.innerHTML = "";
 
         const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
         const bookedThisDay = bookedHours[dateKey] || [];
@@ -1231,9 +1241,21 @@
           }
 
           grid.appendChild(btn);
+
+          if (gridMobile) {
+            const btnM = btn.cloneNode(true);
+            if (!bookedThisDay.includes(hour)) {
+              btnM.addEventListener("click", (e) => {
+                e.preventDefault();
+                selectHour(hour, btnM);
+              });
+            }
+            gridMobile.appendChild(btnM);
+          }
         });
 
         container.classList.remove("hidden");
+        if (containerMobile) containerMobile.classList.remove("hidden");
       }
 
       function selectHour(hour, element) {
@@ -1818,6 +1840,8 @@
         selectedDate = null;
         selectedHour = null;
         document.getElementById("availableHoursContainer").classList.add("hidden");
+        const mobileContainer = document.getElementById("availableHoursContainerMobile");
+        if (mobileContainer) mobileContainer.classList.add("hidden");
         document.querySelectorAll(".day-cell").forEach((cell) => {
           cell.classList.remove("selected");
         });

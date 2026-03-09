@@ -2565,6 +2565,17 @@ html.dark-mode .resumo-project-name {
 /* ========== MOBILE (até 768px) ========== */
 @media (max-width: 768px) {
 
+      /* Fundo sólido no mobile — sem blobs coloridos */
+      html {
+            background-color: #f0f2f8;
+      }
+      html.dark-mode {
+            background-color: #0f0f10;
+      }
+      .bg-blobs {
+            display: none;
+      }
+
       /* Calendar */
       .calendar-workspace {
             grid-template-columns: 1fr;
@@ -2583,11 +2594,11 @@ html.dark-mode .resumo-project-name {
       }
 
       .calendar-main {
-            padding: 0;
+            padding: 12px;
       }
 
       .calendar-grid {
-            padding: 10px;
+            padding: 4px 0 0;
       }
 
       /* Section header */
@@ -2599,30 +2610,38 @@ html.dark-mode .resumo-project-name {
             font-size: 13px;
       }
 
-      /* Sidebar -> overlay */
+      /* Sidebar -> overlay deslizante */
       .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
+            width: 280px;
             z-index: 100;
             transform: translateX(-280px);
             transition: transform 0.3s ease;
+            overflow-y: auto;
+            background: var(--bg-alpha);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
       }
 
       .sidebar.open {
             transform: translateX(0);
       }
 
-      /* Dashboard view */
+      /* Dashboard view — necessário para o overlay funcionar */
       .view-container.dashboard-view.active {
             overflow: visible;
-            position: relative;
+            height: auto;
+            min-height: 100vh;
       }
 
       .main-content {
             width: 100%;
             overflow-x: hidden;
+            overflow-y: auto;
       }
 
       /* Header mobile */
