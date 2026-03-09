@@ -2961,6 +2961,16 @@ html:not(.admin-mode) .header-mobile-logo {
    o fundo --bg-light (#0f0f10), igual ao painel de Resumo.
    =================================================================== */
 
+/* Oculta blobs no dark mode — fundo sólido é mais adequado */
+html.dark-mode .bg-blobs {
+      display: none;
+}
+
+/* Área principal de conteúdo sólida */
+html.dark-mode .main-content {
+      background: var(--bg-light);
+}
+
 /* Sidebar */
 html.dark-mode .sidebar {
       background: var(--surface-light);
