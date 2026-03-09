@@ -47,31 +47,23 @@
 }
 
 /* ========== TOKENS — DARK MODE ========== */
-html.dark-mode,
-html.dark-mode body {
-      background-color: #0d0d10;
-}
-
 html.dark-mode {
-      --primary: #0d0d10;
-      --secondary: #17171b;
+      --primary: #0f0f10;
+      --secondary: #1a1a1d;
 
-      /* 3 níveis de background — dá hierarquia visual real */
-      --bg-light:      #0d0d10;  /* fundo da página (mais escuro) */
-      --bg-dark:       #17171b;  /* segundo nível (shell, sidebar) */
-      --bg-alpha:      #0d0d10;  /* solid */
+      --bg-light: #0f0f10;
+      --bg-dark: #1a1a1d;
+      --bg-alpha: rgba(15, 15, 16, 0.82);
 
-      /* Surfaces (cards, cells, inputs) */
-      --surface-light: #1e1e23;  /* terceiro nível (calendário shell, header) */
-      --surface-dark:  #26262c;  /* quarto nível (células, cards interativos) */
+      --surface-light: #1f1f23;
+      --surface-dark: #2a2a2f;
 
-      --text-light: #e8e8f0;
-      --text-dark:  #a0a0b0;
-      --muted:      #6b6b80;
+      --text-light: #f2f2f2;
+      --text-dark: #c8c8c8;
+      --muted: #848484;
 
-      /* Bordas mais visíveis */
-      --border-light: #34343c;
-      --border-dark:  #42424c;
+      --border-light: #2e2e33;
+      --border-dark: #3a3a40;
 
       --accent: #111bd9;
       --planned: #059669;
@@ -161,6 +153,11 @@ body {
                   rgba(249, 115, 22, 0.52) 0%,
                   rgba(236, 72, 153, 0.28) 38%,
                   transparent 70%);
+}
+
+/* Dark mode: sem gradientes coloridos */
+html.dark-mode .bg-blobs {
+      display: none;
 }
 
 /* ========== SPA — VIEW CONTAINERS ========== */
@@ -262,9 +259,7 @@ body {
 }
 
 html.dark-mode .sidebar::after {
-      background:
-            radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.25), rgba(6, 182, 212, 0.12) 50%, transparent 72%),
-            radial-gradient(ellipse at 90% 60%, rgba(249, 115, 22, 0.18), rgba(236, 72, 153, 0.08) 50%, transparent 72%);
+      background: none;
 }
 
 .sidebar-header {
@@ -936,7 +931,7 @@ html.dark-mode .form-error {
 }
 
 html.dark-mode .calendar-side-panel {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.025);
 }
 
 .calendar-side-panel .sidebar-section {
@@ -2963,172 +2958,4 @@ html:not(.admin-mode) .sidebar-mobile-toggle {
 /* Mostra logo no header em modo cliente (sem sidebar para branding) */
 html:not(.admin-mode) .header-mobile-logo {
       display: flex !important;
-}
-
-/* ===================================================================
-   DARK MODE — SUPERFÍCIES SÓLIDAS COM HIERARQUIA VISUAL
-   Nível 0: #0d0d10 — fundo da página
-   Nível 1: #1e1e23 — sidebar, header, shell do calendário
-   Nível 2: #26262c — células, cards interativos, inputs
-   =================================================================== */
-
-/* Oculta blobs no dark mode */
-html.dark-mode .bg-blobs {
-      display: none !important;
-}
-
-/* Toda a view principal e body sólido */
-html.dark-mode .view-container,
-html.dark-mode .view-container.dashboard-view.active,
-html.dark-mode .main-content {
-      background: var(--bg-light);
-}
-
-/* Sidebar — nível 1 */
-html.dark-mode .sidebar {
-      background: var(--surface-light);
-      border-right-color: var(--border-light);
-}
-
-/* Header — nível 1 */
-html.dark-mode .header {
-      background: var(--surface-light);
-      border-bottom-color: var(--border-light);
-}
-
-/* Calendário shell — nível 1 */
-html.dark-mode .calendar-shell {
-      background: var(--surface-light);
-      border-color: var(--border-light);
-      box-shadow: 0 8px 48px rgba(0,0,0,0.4);
-}
-
-/* Área do grid (calendar-main) — levemente diferente do shell */
-html.dark-mode .calendar-workspace {
-      background: var(--surface-light);
-}
-
-/* Painel lateral do calendário */
-html.dark-mode .calendar-side-panel {
-      background: rgba(0, 0, 0, 0.2);
-      border-left-color: var(--border-light);
-}
-
-/* Células do calendário — nível 2 (mais claras que o shell) */
-html.dark-mode .day-cell {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-      color: var(--text-light);
-}
-
-html.dark-mode .day-cell:hover:not(.disabled):not(.other-month) {
-      background: rgba(17, 27, 217, 0.2);
-      border-color: rgba(17, 27, 217, 0.5);
-}
-
-html.dark-mode .day-cell.today {
-      background: rgba(17, 27, 217, 0.15);
-      color: #818cf8;
-      border: 2px solid #4f5fe8;
-      box-shadow: 0 0 0 3px rgba(79, 95, 232, 0.15);
-}
-
-html.dark-mode .day-cell.selected {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-}
-
-html.dark-mode .day-cell.disabled,
-html.dark-mode .day-cell.other-month {
-      background: transparent;
-      border-color: transparent;
-}
-
-/* Sidebar cards — nível 2 */
-html.dark-mode .sidebar-card {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-}
-
-/* Lista de agendamentos — nível 1 */
-html.dark-mode .appointments-list {
-      background: var(--surface-light);
-      border-color: var(--border-light);
-}
-
-/* Card de agendamento — nível 2 */
-html.dark-mode .appointment-item {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-}
-
-/* Modal — nível 1 */
-html.dark-mode .modal {
-      background: var(--surface-light);
-      border-color: var(--border-light);
-}
-
-/* Modal de notificação — nível 1 */
-html.dark-mode .notify-modal-content {
-      background: var(--surface-light);
-      border-color: var(--border-light);
-}
-
-/* Login card — nível 1 */
-html.dark-mode .login-card {
-      background: var(--surface-light);
-      border-color: var(--border-light);
-}
-
-/* Botões de navegação do calendário — nível 2 */
-html.dark-mode .nav-button {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-      color: var(--text-light);
-}
-
-/* Opções de horário — nível 2 */
-html.dark-mode .hour-option {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-      color: var(--text-light);
-}
-
-/* Inputs/selects/textareas — nível 2 */
-html.dark-mode .form-group input,
-html.dark-mode .form-group textarea,
-html.dark-mode .form-group select {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-      color: var(--text-light);
-}
-
-/* Botões filtro */
-html.dark-mode .filter-btn {
-      background: var(--surface-dark);
-      border-color: var(--border-light);
-      color: var(--text-light);
-}
-
-html.dark-mode .filter-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-}
-
-/* Mobile sidebar content */
-html.dark-mode .mobile-sidebar-content {
-      background: var(--surface-light);
-}
-
-/* Nav items fundo */
-html.dark-mode .sidebar-nav-item {
-      color: var(--text-dark);
-}
-
-html.dark-mode .sidebar-nav-item.active {
-      background: rgba(17, 27, 217, 0.2);
-      color: #818cf8;
-      border-color: rgba(79, 95, 232, 0.4);
 }
