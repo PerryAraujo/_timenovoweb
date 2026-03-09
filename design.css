@@ -2954,3 +2954,104 @@ html:not(.admin-mode) .sidebar-mobile-toggle {
 html:not(.admin-mode) .header-mobile-logo {
       display: flex !important;
 }
+
+/* ===================================================================
+   DARK MODE — SUPERFÍCIES SÓLIDAS
+   Todos os containers/cards usam --surface-light (#1f1f23) sobre
+   o fundo --bg-light (#0f0f10), igual ao painel de Resumo.
+   =================================================================== */
+
+/* Sidebar */
+html.dark-mode .sidebar {
+      background: var(--surface-light);
+      border-right-color: var(--border-light);
+}
+
+/* Header */
+html.dark-mode .header {
+      background: var(--surface-light);
+      border-bottom-color: var(--border-light);
+}
+
+/* Calendário shell */
+html.dark-mode .calendar-shell {
+      background: var(--surface-light);
+}
+
+/* Painel lateral do calendário */
+html.dark-mode .calendar-side-panel {
+      background: rgba(255, 255, 255, 0.03);
+}
+
+/* Sidebar cards */
+html.dark-mode .sidebar-card {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+/* Lista de agendamentos */
+html.dark-mode .appointments-list {
+      background: var(--surface-light);
+      border-color: var(--border-light);
+}
+
+/* Card de agendamento */
+html.dark-mode .appointment-item {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+/* Modal de agendamento */
+html.dark-mode .modal {
+      background: var(--surface-light);
+      border-color: var(--border-light);
+}
+
+/* Modal de notificação */
+html.dark-mode .notify-modal-content {
+      background: var(--surface-light);
+      border-color: var(--border-light);
+}
+
+/* Login card */
+html.dark-mode .login-card {
+      background: var(--surface-light);
+      border-color: var(--border-light);
+}
+
+/* Botões de navegação do calendário */
+html.dark-mode .nav-button {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+/* Opções de horário */
+html.dark-mode .hour-option {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+/* Inputs/selects/textareas */
+html.dark-mode .form-group input,
+html.dark-mode .form-group textarea,
+html.dark-mode .form-group select {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+/* Botões filtro */
+html.dark-mode .filter-btn {
+      background: var(--surface-dark);
+      border-color: var(--border-light);
+}
+
+html.dark-mode .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+}
+
+/* Mobile sidebar content */
+html.dark-mode .mobile-sidebar-content {
+      background: var(--surface-light);
+}
