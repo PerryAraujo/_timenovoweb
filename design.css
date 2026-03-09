@@ -53,7 +53,7 @@ html.dark-mode {
 
       --bg-light: #0f0f10;
       --bg-dark: #1a1a1d;
-      --bg-alpha: rgba(15, 15, 16, 0.82);
+      --bg-alpha: #0f0f10;
 
       --surface-light: #1f1f23;
       --surface-dark: #2a2a2f;
@@ -928,7 +928,7 @@ html.dark-mode .form-error {
 }
 
 html.dark-mode .calendar-side-panel {
-      background: rgba(255, 255, 255, 0.025);
+      background: rgba(255, 255, 255, 0.03);
 }
 
 .calendar-side-panel .sidebar-section {
