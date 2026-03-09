@@ -343,8 +343,8 @@
             </div>
           </div>
 
-          <!-- Lista de Agendamentos (página "Agendamentos") — oculta por padrão, só admin acessa -->
-          <div class="appointments-list hidden" id="appointmentsListWrapper">
+          <!-- Lista de Agendamentos — visível abaixo do calendário em modo admin -->
+          <div class="appointments-list" id="appointmentsListWrapper">
             <div class="appointments-list-title">
               <i class="fa-solid fa-calendar-days" aria-hidden></i>
               Agendamentos
@@ -738,7 +738,8 @@
         const mobileSidebarContent = document.querySelector(".mobile-sidebar-content");
 
         if (calendarSection) calendarSection.classList.toggle("hidden", page !== "agendar");
-        if (listWrapper) listWrapper.classList.toggle("hidden", page !== "lista");
+        // Lista fica visível em "agendar" e "lista", oculta apenas em "resumo"
+        if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo");
         if (resumoPage) resumoPage.classList.toggle("hidden", page !== "resumo");
         if (bookingActions) bookingActions.classList.toggle("hidden", page !== "agendar");
         // Mobile: mostra o painel de seleção apenas na aba Agendar

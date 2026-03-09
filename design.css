@@ -1336,19 +1336,21 @@ html.dark-mode .calendar-side-panel {
 .appointments-list {
       background: var(--bg-alpha);
       border: 1px solid var(--border-light);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: 18px;
+      padding: 28px 28px 20px;
       margin-top: 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
 .appointments-list-title {
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 17px;
+      font-weight: 700;
       margin-bottom: 16px;
       color: var(--text-light);
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.3px;
 }
 
 .appointment-item {
@@ -1486,14 +1488,14 @@ html.dark-mode .appointment-item:hover {
 
 .modal {
       background: var(--bg-light);
-      border-radius: 10px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 2px 12px rgba(0,0,0,0.07);
       border: 1px solid var(--border-light);
       max-width: 480px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      padding: 36px;
+      padding: 0;
       position: relative;
       will-change: transform, opacity;
       transform: translateZ(0);
@@ -1501,35 +1503,72 @@ html.dark-mode .appointment-item:hover {
       animation: slideUp 0.2s ease;
 }
 
+/* Faixa de cor no topo do modal */
+.modal::before {
+      content: "";
+      display: block;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent), #6366f1);
+      border-radius: 20px 20px 0 0;
+}
+
+/* Conteúdo interno do modal com padding */
+#modalOverlay .modal form,
+#modalOverlay .modal .modal-title,
+#modalOverlay .modal .selected-date-display,
+#confirmModalOverlay .modal h2,
+#confirmModalOverlay .modal p,
+#confirmModalOverlay .modal .modal-buttons {
+      padding-left: 32px;
+      padding-right: 32px;
+}
+
+#modalOverlay .modal .modal-title,
+#confirmModalOverlay .modal h2 {
+      padding-top: 24px;
+}
+
+#modalOverlay .modal .modal-buttons,
+#confirmModalOverlay .modal .modal-buttons {
+      padding-bottom: 28px;
+}
+
+#modalOverlay .modal .selected-date-display {
+      padding-left: 32px;
+      padding-right: 32px;
+}
+
 .modal-title {
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-light);
-      margin-bottom: 20px;
-      letter-spacing: -0.3px;
+      margin-bottom: 18px;
+      letter-spacing: -0.4px;
 }
 
 .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      border-radius: 5px;
-      width: 28px;
-      height: 28px;
+      top: 18px;
+      right: 18px;
+      background: var(--surface-light);
+      border: 1px solid var(--border-light);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 14px;
       color: var(--muted);
-      transition: color 0.15s, background-color 0.15s;
+      transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+      z-index: 2;
 }
 
 .modal-close:hover {
       color: var(--text-light);
       background-color: var(--border-light);
+      border-color: var(--accent);
 }
 
 .modal-footer {
@@ -1537,7 +1576,7 @@ html.dark-mode .appointment-item:hover {
       gap: 10px;
       justify-content: flex-end;
       margin-top: 24px;
-      padding-top: 20px;
+      padding: 16px 32px 28px;
       border-top: 1px solid var(--border-light);
 }
 
@@ -1545,19 +1584,19 @@ html.dark-mode .appointment-item:hover {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 24px;
+      margin-top: 20px;
 }
 
 /* Display da data/hora selecionada no modal */
 .selected-date-display {
-      background: var(--surface-light);
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      padding: 12px 14px;
+      background: linear-gradient(135deg, rgba(17,27,217,0.06), rgba(99,102,241,0.05));
+      border: 1.5px solid rgba(17,27,217,0.18);
+      border-radius: 12px;
+      padding: 14px 16px;
       margin-bottom: 20px;
       font-size: 13px;
-      color: var(--muted);
-      font-weight: 500;
+      color: var(--accent);
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1711,6 +1750,12 @@ html.admin-mode .admin-only {
 html.admin-mode div.admin-only,
 html.admin-mode section.admin-only {
       display: block !important;
+}
+
+/* Lista de agendamentos e resumo ocultos para clientes (sem admin mode) */
+html:not(.admin-mode) #appointmentsListWrapper,
+html:not(.admin-mode) #resumoPage {
+      display: none !important;
 }
 
 /* ========== SCROLLBAR GLOBAL ========== */
