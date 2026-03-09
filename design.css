@@ -47,6 +47,11 @@
 }
 
 /* ========== TOKENS — DARK MODE ========== */
+html.dark-mode,
+html.dark-mode body {
+      background-color: var(--bg-light); /* #0f0f10 — cobre os blobs completamente */
+}
+
 html.dark-mode {
       --primary: #0f0f10;
       --secondary: #1a1a1d;
@@ -2963,10 +2968,12 @@ html:not(.admin-mode) .header-mobile-logo {
 
 /* Oculta blobs no dark mode — fundo sólido é mais adequado */
 html.dark-mode .bg-blobs {
-      display: none;
+      display: none !important;
 }
 
-/* Área principal de conteúdo sólida */
+/* Toda a view principal sólida */
+html.dark-mode .view-container,
+html.dark-mode .view-container.dashboard-view.active,
 html.dark-mode .main-content {
       background: var(--bg-light);
 }
