@@ -174,8 +174,10 @@
             <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" aria-label="Abrir menu">
               <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
-            NovoWeb
-            <span class="product-badge">Time</span>
+            <a href="index.html" style="cursor:pointer; text-decoration:none; color:inherit; display:flex; align-items:center; gap:6px;">
+              NovoWeb
+              <span class="product-badge">Time</span>
+            </a>
           </div>
 
           <!-- Título desktop -->
@@ -730,11 +732,14 @@
         const listWrapper = document.getElementById("appointmentsListWrapper");
         const resumoPage = document.getElementById("resumoPage");
         const bookingActions = document.getElementById("sidebarBookingActions");
+        const mobileSidebarContent = document.querySelector(".mobile-sidebar-content");
 
         if (calendarSection) calendarSection.classList.toggle("hidden", page !== "agendar");
         if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo");
         if (resumoPage) resumoPage.classList.toggle("hidden", page !== "resumo");
         if (bookingActions) bookingActions.classList.toggle("hidden", page !== "agendar");
+        // Mobile: mostra o painel de seleção apenas na aba Agendar
+        if (mobileSidebarContent) mobileSidebarContent.classList.toggle("hidden", page !== "agendar");
 
         // Atualiza o título do header (padrão VISO)
         const titles = {
@@ -1022,13 +1027,14 @@
       function openMobileSidebar() {
         document.getElementById("sidebar").classList.add("open");
         document.getElementById("sidebarOverlay").classList.add("open");
-        document.body.style.overflow = "hidden";
+        // Não bloqueia o overflow da página — o overlay já cobre o conteúdo
       }
 
       function closeMobileSidebar() {
         document.getElementById("sidebar").classList.remove("open");
         document.getElementById("sidebarOverlay").classList.remove("open");
         document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
       }
 
       // ========== ADMIN MODE (cliente NÃO vê elementos .admin-only) ==========

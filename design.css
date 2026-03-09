@@ -2636,12 +2636,15 @@ html.dark-mode .resumo-project-name {
             overflow: visible;
             height: auto;
             min-height: 100vh;
+            flex-direction: column;
       }
 
       .main-content {
             width: 100%;
             overflow-x: hidden;
             overflow-y: auto;
+            min-height: 0;
+            flex: 1;
       }
 
       /* Header mobile */
