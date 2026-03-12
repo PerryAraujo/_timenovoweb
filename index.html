@@ -538,6 +538,18 @@
       <span id="successText">Agendamento confirmado com sucesso!</span>
     </div>
 
+    <!-- Modal Seleção de Horário — Mobile only -->
+    <div class="modal-overlay" id="mobileHoursModalOverlay" role="dialog" aria-modal="true" aria-labelledby="mobileHoursModalTitle">
+      <div class="modal">
+        <button class="modal-close" id="mobileHoursModalClose" aria-label="Fechar">
+          <i class="fa-solid fa-xmark" aria-hidden></i>
+        </button>
+        <h2 class="modal-title" id="mobileHoursModalTitle">Escolha o Horário</h2>
+        <div class="selected-date-display" id="mobileHoursDateDisplay"></div>
+        <div id="mobileHoursGrid" class="hours-grid" style="margin-top:20px;"></div>
+      </div>
+    </div>
+
     <!-- Confirm Modal (manual §9.3) -->
     <div
       class="modal-overlay"
@@ -1220,6 +1232,11 @@
 
         displayAvailableHours();
         updateSidebar();
+
+        // Mobile: abre modal de seleção de horário diretamente
+        if (window.innerWidth <= 900) {
+          openMobileHoursModal();
+        }
       }
 
       function displayAvailableHours() {
@@ -1526,6 +1543,54 @@
         closeModal("modalOverlay");
         document.body.style.overflow = "";
         document.getElementById("appointmentForm").reset();
+      }
+
+      // ========== MODAL DE HORÁRIOS — MOBILE ==========
+      function openMobileHoursModal() {
+        if (!selectedDate) return;
+
+        const dateStr = selectedDate.toLocaleDateString("pt-BR", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const cap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        document.getElementById("mobileHoursDateDisplay").innerHTML =
+          `<i class="fa-solid fa-calendar" aria-hidden></i> ${escHtml(cap)}`;
+
+        const grid = document.getElementById("mobileHoursGrid");
+        grid.innerHTML = "";
+
+        const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+        const bookedThisDay = bookedHours[dateKey] || [];
+
+        availableHours.forEach((hour) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "hour-option";
+          btn.textContent = hour;
+          if (bookedThisDay.includes(hour)) {
+            btn.classList.add("unavailable");
+            btn.disabled = true;
+          } else {
+            btn.addEventListener("click", () => {
+              selectHour(hour, btn);
+              closeMobileHoursModal();
+              // Abre imediatamente o modal de confirmação
+              setTimeout(() => openBookingModal(), 180);
+            });
+          }
+          grid.appendChild(btn);
+        });
+
+        openModal("mobileHoursModalOverlay");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeMobileHoursModal() {
+        closeModal("mobileHoursModalOverlay");
+        document.body.style.overflow = "";
       }
 
       // ========== FORM SUBMISSION ==========
@@ -2027,6 +2092,12 @@
         document.getElementById("modalClose").addEventListener("click", closeBookingModal);
         document.getElementById("cancelBtn").addEventListener("click", closeBookingModal);
         document.getElementById("appointmentForm").addEventListener("submit", handleFormSubmit);
+
+        // Modal de horários mobile
+        document.getElementById("mobileHoursModalClose").addEventListener("click", closeMobileHoursModal);
+        document.getElementById("mobileHoursModalOverlay").addEventListener("click", (e) => {
+          if (e.target.id === "mobileHoursModalOverlay") closeMobileHoursModal();
+        });
 
         document
           .getElementById("confirmBookingBtnMobile")
