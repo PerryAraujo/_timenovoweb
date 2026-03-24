@@ -4,7 +4,27 @@
   },
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "firestore.rules",
+      "_redirects",
+      "**/.*",
+      "**/node_modules/**",
+      "functions/**",
+      "public/**",
+      "**/*.md",
+      ".vscode/**"
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      },
+      {
+        "source": "**/*.@(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+      }
+    ],
     "rewrites": [
       {
         "source": "**",

@@ -12,6 +12,7 @@
     />
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <!-- Google Analytics (gtag.js) -->
@@ -78,6 +79,8 @@
           <div class="login-logo">NovoWeb</div>
           <h2 class="login-title">Área Administrativa</h2>
           <p class="login-subtitle">Gerencie os agendamentos dos seus clientes.</p>
+          <!-- SEGURANÇA: <form> adequado habilita autocomplete, Enter para submit e managers de senha -->
+          <form id="adminLoginForm" autocomplete="on">
           <div class="form-group">
             <label>
               E-mail
@@ -88,6 +91,7 @@
               id="adminEmailInput"
               placeholder="email@exemplo.com"
               autocomplete="username"
+              required
             />
           </div>
           <div class="form-group">
@@ -100,13 +104,16 @@
               id="adminPasswordInput"
               placeholder="Senha administrativa"
               autocomplete="current-password"
+              required
             />
           </div>
           <div id="adminLoginError" class="form-error hidden" role="alert" aria-live="polite"></div>
-          <button class="btn btn-primary btn-full" id="adminLoginBtn" type="button">
+          <!-- type="submit" dentro do <form>: Enter em qualquer campo submete o formulário -->
+          <button class="btn btn-primary btn-full" id="adminLoginBtn" type="submit">
             <i class="fa-solid fa-right-from-bracket" aria-hidden></i>
             Entrar
           </button>
+          </form>
           <div class="login-footer">
             <button class="btn-link" id="backToMainBtn" type="button">
               <i class="fa-solid fa-arrow-left" aria-hidden></i>
@@ -161,6 +168,11 @@
             <button class="sidebar-nav-item" id="navResumoBtn" data-page="resumo">
               <i class="fa-solid fa-chart-simple"></i>
               <span>Resumo</span>
+            </button>
+            <button class="sidebar-nav-item admin-only" id="navVisitorsBtn" data-page="visitors">
+              <i class="fa-solid fa-eye"></i>
+              <span>Visitantes</span>
+              <span class="nav-badge" id="navVisitorsBadge">0</span>
             </button>
           </div>
         </div>
@@ -352,7 +364,8 @@
                 </button>
               </div>
             </div>
-          </div>-->
+          -->
+          </div>
 
           <!-- Lista de Agendamentos — visível abaixo do calendário em modo admin -->
           <div class="appointments-list" id="appointmentsListWrapper">
@@ -470,6 +483,77 @@
             </div>
           </div>
 
+          <!-- Página de Visitantes — acesso exclusivo admin -->
+          <div id="visitorsPage" class="resumo-page hidden">
+            <div class="resumo-header">
+              <div>
+                <h2 class="resumo-page-title">Visitantes</h2>
+                <p class="resumo-page-subtitle">Registro de acessos ao site em tempo real</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="visitors-total-badge" id="visitorsTotalBadge">0 visitas</span>
+                <button class="btn btn-outline btn-small" id="visitorsRefreshBtn" type="button">
+                  <i class="fa-solid fa-arrows-rotate"></i> Atualizar
+                </button>
+              </div>
+            </div>
+
+            <!-- Stat cards -->
+            <div class="resumo-cards-grid" style="margin-bottom:20px;">
+              <div class="resumo-card resumo-card--blue">
+                <div class="resumo-card-icon"><i class="fa-solid fa-users"></i></div>
+                <div>
+                  <div class="resumo-card-value" id="visStatTotal">0</div>
+                  <div class="resumo-card-label">Total</div>
+                </div>
+              </div>
+              <div class="resumo-card resumo-card--green">
+                <div class="resumo-card-icon"><i class="fa-solid fa-calendar-day"></i></div>
+                <div>
+                  <div class="resumo-card-value" id="visStatToday">0</div>
+                  <div class="resumo-card-label">Hoje</div>
+                </div>
+              </div>
+              <div class="resumo-card resumo-card--amber">
+                <div class="resumo-card-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                <div>
+                  <div class="resumo-card-value" id="visStatMobile">0</div>
+                  <div class="resumo-card-label">Mobile</div>
+                </div>
+              </div>
+              <div class="resumo-card resumo-card--purple">
+                <div class="resumo-card-icon"><i class="fa-solid fa-globe"></i></div>
+                <div>
+                  <div class="resumo-card-value" id="visStatCountries">0</div>
+                  <div class="resumo-card-label">Países</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela de visitantes -->
+            <div class="resumo-section-card" style="overflow-x:auto;">
+              <div class="resumo-section-title">
+                <i class="fa-solid fa-table-list"></i>
+                Histórico de Acessos
+              </div>
+              <table class="visitors-table">
+                <thead>
+                  <tr>
+                    <th>Data / Hora</th>
+                    <th>IP</th>
+                    <th>País</th>
+                    <th>Cidade</th>
+                    <th>Página</th>
+                    <th class="vis-col-ua">Navegador / Dispositivo</th>
+                  </tr>
+                </thead>
+                <tbody id="visitorsTableBody">
+                  <tr><td colspan="6" class="visitors-empty">Carregando…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- Footer -->
           <footer class="footer">© 2026 NovoWeb — Time</footer>
         </div>
@@ -573,6 +657,68 @@
 
     <!-- Footer -->
 
+    <!-- CSS do painel de visitantes (escopo local para não poluir design.css) -->
+    <style>
+      .visitors-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .visitors-table th {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+        color: var(--muted);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .visitors-table td {
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+        vertical-align: top;
+      }
+      .visitors-table tr:last-child td { border-bottom: none; }
+      .visitors-table tr:hover td { background: var(--surface-hover, rgba(0,0,0,.03)); }
+      .vis-col-ua { max-width: 240px; }
+      .vis-ua-text {
+        max-width: 240px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+      }
+      .vis-page-url {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        color: var(--accent);
+        font-size: 12px;
+      }
+      .visitors-empty {
+        text-align: center;
+        color: var(--muted);
+        padding: 32px 0;
+      }
+      .visitors-total-badge {
+        background: var(--accent);
+        color: #fff;
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .vis-ip-badge {
+        font-family: monospace;
+        font-size: 12px;
+        background: var(--surface-2, rgba(0,0,0,.06));
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+    </style>
+
     <script>
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
@@ -587,6 +733,8 @@
 
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
+      // SEGURANÇA: auth é a fonte verdadeira do estado admin — não localStorage
+      const auth = firebase.auth();
 
       // ========== STATE ==========
       let currentDate = new Date();
@@ -596,10 +744,9 @@
       let appointments = [];
       const bookedHours = {};
 
-      // Admin mode state (client-side): altere a senha abaixo para proteger o modo admin.
-      // OBS: Isso é apenas proteção no cliente; para segurança real use um backend.
+      // SEGURANÇA: isAdmin é controlado exclusivamente por Firebase Auth (onAuthStateChanged).
+      // Não há mais senha no fonte — o login usa email/senha configurados no Firebase Console.
       let isAdmin = false;
-      const ADMIN_PASSWORD = atob("Tm92b1dlYl8wMjAy"); // Senha codificada em base64
 
       // ── Cleanup handles (manual §5) ────────────────────────────
       let unsubscribeAppointments = null;
@@ -757,13 +904,15 @@
         const calendarSection = document.querySelector(".calendar-section");
         const listWrapper = document.getElementById("appointmentsListWrapper");
         const resumoPage = document.getElementById("resumoPage");
+        const visitorsPage = document.getElementById("visitorsPage");
         const bookingActions = document.getElementById("sidebarBookingActions");
         const mobileSidebarContent = document.querySelector(".mobile-sidebar-content");
 
         if (calendarSection) calendarSection.classList.toggle("hidden", page !== "agendar");
-        // Lista fica visível em "agendar" e "lista", oculta apenas em "resumo"
-        if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo");
+        // Lista fica visível em "agendar" e "lista", oculta em resumo/visitors
+        if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo" || page === "visitors");
         if (resumoPage) resumoPage.classList.toggle("hidden", page !== "resumo");
+        if (visitorsPage) visitorsPage.classList.toggle("hidden", page !== "visitors");
         if (bookingActions) bookingActions.classList.toggle("hidden", page !== "agendar");
         // Mobile: mostra o painel de seleção apenas na aba Agendar
         if (mobileSidebarContent)
@@ -774,6 +923,7 @@
           agendar: "Agende sua Reunião",
           lista: "Agendamentos",
           resumo: "Painel de Resumo",
+          visitors: "Visitantes",
         };
         const headerTitle = document.getElementById("headerTitle");
         if (headerTitle) {
@@ -787,9 +937,154 @@
         });
 
         if (page === "resumo") renderResumo();
+        else if (page === "visitors") renderVisitors();
         else updateAppointmentsList();
 
         closeMobileSidebar();
+      }
+
+      // ========== RASTREAMENTO DE VISITANTES ==========
+
+      /**
+       * Captura IP via ipify, geolocalização via ipapi.co e salva no Firestore.
+       * Fire-and-forget: erros não afetam a experiência do visitante.
+       * Segurança: dados inseridos somente via regra Firestore (não é leitura pública).
+       */
+      async function trackVisitor() {
+        try {
+          if (typeof db === "undefined") return;
+
+          // 1. Obtém IP público
+          const ipRes = await fetch("https://api.ipify.org?format=json");
+          const { ip } = await ipRes.json();
+
+          // 2. Obtém geolocalização (país, cidade)
+          let country = "";
+          let city = "";
+          try {
+            const geoRes = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
+            const geo = await geoRes.json();
+            country = geo.country_name || geo.country || "";
+            city = geo.city || "";
+          } catch (_) {
+            // geo é opcional — não bloqueia o registro
+          }
+
+          // 3. Parse simplificado do user-agent
+          const ua = navigator.userAgent || "";
+          const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+
+          // 4. Persiste no Firestore (write-only para visitantes, regra de segurança)
+          await db.collection("visitors").add({
+            ip,
+            country,
+            city,
+            page: window.location.href,
+            userAgent: ua,
+            isMobile,
+            accessedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+
+          console.debug("[trackVisitor] visita registrada", { ip, country, city });
+        } catch (err) {
+          // Silencioso: erros de tracking não devem quebrar a página
+          console.warn("[trackVisitor] Não foi possível registrar visita:", err.message);
+        }
+      }
+
+      /**
+       * Escuta em tempo real a coleção visitors (só ativada após login admin).
+       */
+      let _visitorsData = [];
+      let _unsubVisitors = null;
+
+      function listenToVisitors() {
+        if (!isAdmin || typeof db === "undefined") return;
+        if (_unsubVisitors) return; // já ouvindo
+
+        _unsubVisitors = db
+          .collection("visitors")
+          .orderBy("accessedAt", "desc")
+          .limit(500)
+          .onSnapshot(
+            (snap) => {
+              _visitorsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+              // Atualiza badge na nav
+              const badge = document.getElementById("navVisitorsBadge");
+              if (badge) badge.textContent = _visitorsData.length;
+
+              // Re-renderiza painel se estiver aberto
+              if (currentPage === "visitors") renderVisitors();
+            },
+            (err) => console.error("[visitors] listener error:", err),
+          );
+      }
+
+      function stopListeningToVisitors() {
+        if (_unsubVisitors) { _unsubVisitors(); _unsubVisitors = null; }
+        _visitorsData = [];
+        const badge = document.getElementById("navVisitorsBadge");
+        if (badge) badge.textContent = "0";
+      }
+
+      /**
+       * Renderiza a tabela e os 4 stat-cards do painel de visitantes.
+       */
+      function renderVisitors() {
+        const tbody = document.getElementById("visitorsTableBody");
+        const totalBadge = document.getElementById("visitorsTotalBadge");
+        const statTotal = document.getElementById("visStatTotal");
+        const statToday = document.getElementById("visStatToday");
+        const statMobile = document.getElementById("visStatMobile");
+        const statCountries = document.getElementById("visStatCountries");
+        if (!tbody) return;
+
+        const data = _visitorsData;
+
+        // --- Stat cards ---
+        const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const todayCount = data.filter((v) => {
+          const ts = v.accessedAt && v.accessedAt.toDate ? v.accessedAt.toDate() : null;
+          return ts && ts >= todayStart;
+        }).length;
+
+        const mobileCount = data.filter((v) => v.isMobile).length;
+        const countries = new Set(data.map((v) => v.country).filter(Boolean));
+
+        if (totalBadge) totalBadge.textContent = `${data.length} visitas`;
+        if (statTotal) statTotal.textContent = data.length;
+        if (statToday) statToday.textContent = todayCount;
+        if (statMobile) statMobile.textContent = mobileCount;
+        if (statCountries) statCountries.textContent = countries.size;
+
+        // --- Tabela ---
+        if (!data.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="visitors-empty"><i class="fa-solid fa-eye-slash"></i> Nenhuma visita registrada ainda.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data
+          .map((v) => {
+            const ts = v.accessedAt && v.accessedAt.toDate
+              ? v.accessedAt.toDate().toLocaleString("pt-BR")
+              : "—";
+            const flag = v.country ? `&#127462;` : ""; // placeholder; sem dep. externa
+            return `
+              <tr>
+                <td style="white-space:nowrap;font-size:12px;">${escHtml(ts)}</td>
+                <td><span class="vis-ip-badge">${escHtml(v.ip || "—")}</span></td>
+                <td style="font-size:12px;">${escHtml(v.country || "—")}</td>
+                <td style="font-size:12px;">${escHtml(v.city || "—")}</td>
+                <td><span class="vis-page-url" title="${escHtml(v.page || "")}">${
+                  escHtml((v.page || "").replace(/^https?:\/\/[^/]+/, "") || "/")
+                }</span></td>
+                <td class="vis-col-ua"><span class="vis-ua-text" title="${escHtml(v.userAgent || "")}">${escHtml(v.userAgent || "—")}</span></td>
+              </tr>`;
+          })
+          .join("");
       }
 
       // ========== RESUMO (padrão VISO) ==========
@@ -927,12 +1222,34 @@
       document.addEventListener("DOMContentLoaded", () => {
         initializeTheme();
 
-        // Carrega estado admin (se presente)
-        isAdmin = localStorage.getItem("nw_isAdmin") === "1";
-        if (isAdmin) {
-          document.documentElement.classList.add("admin-mode");
-        }
-        updateAdminUI();
+        // SEGURANÇA: Firebase Auth rastreia sessão real — não localStorage manipulável
+        auth.onAuthStateChanged((user) => {
+          const wasAdmin = isAdmin;
+          isAdmin = !!user;
+
+          if (isAdmin) {
+            document.documentElement.classList.add("admin-mode");
+            listenToVisitors(); // inicia listener de visitantes apenas após login
+            // Se autenticou a partir da tela de login, redireciona para a view principal
+            const loginView = document.getElementById("adminLoginView");
+            if (loginView && loginView.classList.contains("active")) {
+              window.location.hash = "";
+              showView("mainView");
+              navigatePage("lista");
+            }
+          } else {
+            document.documentElement.classList.remove("admin-mode");
+            stopListeningToVisitors(); // para o listener ao fazer logout
+            // Se fez logout, volta para a página de agendamento público
+            if (wasAdmin) navigatePage("agendar");
+          }
+
+          updateAdminUI();
+          updateAppointmentsList();
+        });
+
+        // Registra a visita (fire-and-forget, não bloqueia a página)
+        trackVisitor();
 
         // Roteamento por hash (padrão VISO)
         handleRoute();
@@ -1101,39 +1418,34 @@
       }
 
       function handleAdminLogin() {
-        const val = (document.getElementById("adminPasswordInput") || {}).value || "";
-        if (val === ADMIN_PASSWORD) {
-          isAdmin = true;
-          localStorage.setItem("nw_isAdmin", "1");
-          document.documentElement.classList.add("admin-mode");
-          updateAdminUI();
-          // Padrão VISO: volta para a view principal após login
-          window.location.hash = "";
-          showView("mainView");
-          updateAppointmentsList();
-          navigatePage("lista"); // Navega direto para os agendamentos
-        } else {
-          const errEl = document.getElementById("adminLoginError");
-          if (errEl) {
-            errEl.textContent = "Senha incorreta. Tente novamente.";
-            errEl.classList.remove("hidden");
-            setTimeout(() => errEl.classList.add("hidden"), 4000);
-          }
-          const passInput = document.getElementById("adminPasswordInput");
-          if (passInput) {
-            passInput.value = "";
-            passInput.focus();
-          }
-        }
+        const emailVal = (document.getElementById("adminEmailInput") || {}).value || "";
+        const passVal  = (document.getElementById("adminPasswordInput") || {}).value || "";
+        const loginBtn = document.getElementById("adminLoginBtn");
+        const errEl    = document.getElementById("adminLoginError");
+
+        // SEGURANÇA: autenticação via Firebase Auth (servidor) — sem senha no cliente
+        setButtonLoading(loginBtn, true, "Entrando...");
+        auth.signInWithEmailAndPassword(emailVal.trim(), passVal)
+          .then(() => {
+            // onAuthStateChanged cuida de atualizar isAdmin, UI e navegação
+          })
+          .catch((err) => {
+            console.error("Admin login error:", err.code);
+            if (errEl) {
+              errEl.textContent = "E-mail ou senha incorretos. Tente novamente.";
+              errEl.classList.remove("hidden");
+              setTimeout(() => errEl.classList.add("hidden"), 4000);
+            }
+            const passInput = document.getElementById("adminPasswordInput");
+            if (passInput) { passInput.value = ""; passInput.focus(); }
+          })
+          .finally(() => setButtonLoading(loginBtn, false));
       }
 
       function adminLogout() {
-        isAdmin = false;
-        localStorage.removeItem("nw_isAdmin");
-        document.documentElement.classList.remove("admin-mode");
-        updateAdminUI();
-        updateAppointmentsList();
-        navigatePage("agendar"); // Volta para página de agendamento
+        // SEGURANÇA: encerra sessão no servidor Firebase — invalida token, não só localStorage
+        auth.signOut().catch((err) => console.error("Logout error:", err));
+        // onAuthStateChanged cuidará de resetar isAdmin, UI e navegação
       }
 
       // ========== CALENDAR ==========
@@ -1854,9 +2166,10 @@
 
       // ========== APPOINTMENT ACTIONS (RESOLVE / NOTIFY) ==========
       function markResolved(id) {
-        if (!isAdmin) {
+        // SEGURANÇA: dupla verificação — flag local + sessão Firebase Auth ativa
+        if (!isAdmin || !auth.currentUser) {
           if (typeof window.showToast === "function")
-            window.showToast("Acesso negado: apenas administradores podem marcar como resolvido.");
+            window.showToast("Acesso negado: sessão de administrador não encontrada.");
           return;
         }
         db.collection("appointments")
@@ -1903,9 +2216,11 @@
 
       // Apaga um agendamento (apenas via UI admin)
       function deleteAppointment(id) {
-        if (!isAdmin) {
+        // SEGURANÇA: dupla verificação — flag local + sessão Firebase Auth ativa
+        // Mesmo que alguém seite isAdmin=true no console, auth.currentUser será null
+        if (!isAdmin || !auth.currentUser) {
           if (typeof window.showToast === "function")
-            window.showToast("Acesso negado: apenas administradores podem apagar agendamentos.");
+            window.showToast("Acesso negado: sessão de administrador não encontrada.");
           return;
         }
         openConfirmModal("Apagar agendamento?", "Esta ação não pode ser desfeita.", () => {
@@ -2042,6 +2357,15 @@
           mobileToggle.addEventListener("click", openMobileSidebar);
         }
 
+        // Botão de atualizar visitantes
+        const visitorsRefreshBtn = document.getElementById("visitorsRefreshBtn");
+        if (visitorsRefreshBtn) {
+          visitorsRefreshBtn.addEventListener("click", () => {
+            // O listener onSnapshot já é real-time; apenas re-renderiza
+            renderVisitors();
+          });
+        }
+
         // Admin button & modal handlers
         const adminBtn = document.getElementById("adminBtn");
         if (adminBtn) {
@@ -2054,20 +2378,17 @@
           });
         }
 
-        // Admin login view: handlers (padrão VISO)
-        const adminLoginBtn = document.getElementById("adminLoginBtn");
-        if (adminLoginBtn) adminLoginBtn.addEventListener("click", handleAdminLogin);
+        // Admin login: o <form> cobre Enter e clique no botão; apenas o submit do form é necessário
+        const adminLoginForm = document.getElementById("adminLoginForm");
+        if (adminLoginForm) {
+          adminLoginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            handleAdminLogin();
+          });
+        }
 
         const backToMainBtn = document.getElementById("backToMainBtn");
         if (backToMainBtn) backToMainBtn.addEventListener("click", closeAdminModal);
-
-        // Enter no campo de senha do admin (UX: não precisa clicar no botão)
-        const adminPasswordEl = document.getElementById("adminPasswordInput");
-        if (adminPasswordEl) {
-          adminPasswordEl.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") handleAdminLogin();
-          });
-        }
 
         document.getElementById("prevMonth").addEventListener("click", () => {
           currentDate.setMonth(currentDate.getMonth() - 1);
