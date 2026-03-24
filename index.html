@@ -531,26 +531,28 @@
             </div>
 
             <!-- Tabela de visitantes -->
-            <div class="resumo-section-card" style="overflow-x:auto;">
-              <div class="resumo-section-title">
-                <i class="fa-solid fa-table-list"></i>
-                Histórico de Acessos
+            <div class="resumo-section-card">
+              <div class="resumo-section-title" id="visitorsTableToggle" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;">
+                <span><i class="fa-solid fa-table-list"></i> Histórico de Acessos</span>
+                <span id="visitorsTableToggleIcon" style="font-size:14px;transition:transform 0.2s;">▼</span>
               </div>
-              <table class="visitors-table">
-                <thead>
-                  <tr>
-                    <th>Data / Hora</th>
-                    <th>IP</th>
-                    <th>País</th>
-                    <th>Cidade</th>
-                    <th>Página</th>
-                    <th class="vis-col-ua">Navegador / Dispositivo</th>
-                  </tr>
-                </thead>
-                <tbody id="visitorsTableBody">
-                  <tr><td colspan="6" class="visitors-empty">Carregando…</td></tr>
-                </tbody>
-              </table>
+              <div id="visitorsTableWrapper" style="overflow-x:auto;">
+                <table class="visitors-table">
+                  <thead>
+                    <tr>
+                      <th>Data / Hora</th>
+                      <th>IP</th>
+                      <th>País</th>
+                      <th>Cidade</th>
+                      <th>Página</th>
+                      <th class="vis-col-ua">Navegador / Dispositivo</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visitorsTableBody">
+                    <tr><td colspan="6" class="visitors-empty">Carregando…</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -937,7 +939,7 @@
         });
 
         if (page === "resumo") renderResumo();
-        else if (page === "visitors") renderVisitors();
+        else if (page === "visitors") { _applyVisitorsTableState(); renderVisitors(); }
         else updateAppointmentsList();
 
         closeMobileSidebar();
@@ -974,7 +976,16 @@
           const ua = navigator.userAgent || "";
           const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
 
-          // 4. Persiste no Firestore (write-only para visitantes, regra de segurança)
+          // 4. Deduplicação: evitar registrar o mesmo IP mais de 1x a cada 30 minutos
+          const lsKey = `lastVisit_${ip}`;
+          const lastTs = parseInt(localStorage.getItem(lsKey) || "0", 10);
+          if (Date.now() - lastTs < 30 * 60 * 1000) {
+            console.debug("[trackVisitor] visita ignorada (mesmo IP < 30min)", { ip });
+            return;
+          }
+          localStorage.setItem(lsKey, String(Date.now()));
+
+          // 5. Persiste no Firestore (write-only para visitantes, regra de segurança)
           await db.collection("visitors").add({
             ip,
             country,
@@ -997,6 +1008,26 @@
        */
       let _visitorsData = [];
       let _unsubVisitors = null;
+      let _visitorsTableCollapsed = localStorage.getItem("visitorsTableCollapsed") === "true";
+
+      /** Pausa o listener sem limpar dados/badge — usado no modo leve */
+      function _pauseVisitorsListener() {
+        if (_unsubVisitors) { _unsubVisitors(); _unsubVisitors = null; }
+      }
+
+      /** Aplica o estado visual de minimizado/maximizado na tabela */
+      function _applyVisitorsTableState() {
+        const wrapper = document.getElementById("visitorsTableWrapper");
+        const icon = document.getElementById("visitorsTableToggleIcon");
+        if (!wrapper || !icon) return;
+        if (_visitorsTableCollapsed) {
+          wrapper.style.display = "none";
+          icon.textContent = "▲";
+        } else {
+          wrapper.style.display = "";
+          icon.textContent = "▼";
+        }
+      }
 
       function listenToVisitors() {
         if (!isAdmin || typeof db === "undefined") return;
@@ -1229,7 +1260,7 @@
 
           if (isAdmin) {
             document.documentElement.classList.add("admin-mode");
-            listenToVisitors(); // inicia listener de visitantes apenas após login
+            if (!_visitorsTableCollapsed) listenToVisitors(); // só inicia listener se tabela estiver expandida (modo leve)
             // Se autenticou a partir da tela de login, redireciona para a view principal
             const loginView = document.getElementById("adminLoginView");
             if (loginView && loginView.classList.contains("active")) {
@@ -2363,6 +2394,24 @@
           visitorsRefreshBtn.addEventListener("click", () => {
             // O listener onSnapshot já é real-time; apenas re-renderiza
             renderVisitors();
+          });
+        }
+
+        // Toggle minimizar/maximizar tabela de histórico de visitantes
+        const visitorsTableToggle = document.getElementById("visitorsTableToggle");
+        if (visitorsTableToggle) {
+          visitorsTableToggle.addEventListener("click", () => {
+            _visitorsTableCollapsed = !_visitorsTableCollapsed;
+            localStorage.setItem("visitorsTableCollapsed", String(_visitorsTableCollapsed));
+            _applyVisitorsTableState();
+            if (_visitorsTableCollapsed) {
+              // Modo leve: pausar listener Firestore ao minimizar
+              _pauseVisitorsListener();
+            } else if (isAdmin) {
+              // Reativar listener ao expandir
+              listenToVisitors();
+              renderVisitors();
+            }
           });
         }
 
