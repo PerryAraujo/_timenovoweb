@@ -81,43 +81,38 @@
           <p class="login-subtitle">Gerencie os agendamentos dos seus clientes.</p>
           <!-- SEGURANÇA: <form> adequado habilita autocomplete, Enter para submit e managers de senha -->
           <form id="adminLoginForm" autocomplete="on">
-            <div class="form-group">
-              <label>
-                E-mail
-                <span class="required">*</span>
-              </label>
-              <input
-                type="email"
-                id="adminEmailInput"
-                placeholder="email@exemplo.com"
-                autocomplete="username"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>
-                Senha
-                <span class="required">*</span>
-              </label>
-              <input
-                type="password"
-                id="adminPasswordInput"
-                placeholder="Senha administrativa"
-                autocomplete="current-password"
-                required
-              />
-            </div>
-            <div
-              id="adminLoginError"
-              class="form-error hidden"
-              role="alert"
-              aria-live="polite"
-            ></div>
-            <!-- type="submit" dentro do <form>: Enter em qualquer campo submete o formulário -->
-            <button class="btn btn-primary btn-full" id="adminLoginBtn" type="submit">
-              <i class="fa-solid fa-right-from-bracket" aria-hidden></i>
-              Entrar
-            </button>
+          <div class="form-group">
+            <label>
+              E-mail
+              <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="adminEmailInput"
+              placeholder="email@exemplo.com"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>
+              Senha
+              <span class="required">*</span>
+            </label>
+            <input
+              type="password"
+              id="adminPasswordInput"
+              placeholder="Senha administrativa"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+          <div id="adminLoginError" class="form-error hidden" role="alert" aria-live="polite"></div>
+          <!-- type="submit" dentro do <form>: Enter em qualquer campo submete o formulário -->
+          <button class="btn btn-primary btn-full" id="adminLoginBtn" type="submit">
+            <i class="fa-solid fa-right-from-bracket" aria-hidden></i>
+            Entrar
+          </button>
           </form>
           <div class="login-footer">
             <button class="btn-link" id="backToMainBtn" type="button">
@@ -369,7 +364,8 @@
                 </button>
               </div>
             </div>
-          --></div>
+          -->
+          </div>
 
           <!-- Lista de Agendamentos — visível abaixo do calendário em modo admin -->
           <div class="appointments-list" id="appointmentsListWrapper">
@@ -494,17 +490,16 @@
                 <h2 class="resumo-page-title">Visitantes</h2>
                 <p class="resumo-page-subtitle">Registro de acessos ao site em tempo real</p>
               </div>
-              <div style="display: flex; gap: 8px; align-items: center">
+              <div style="display:flex;gap:8px;align-items:center;">
                 <span class="visitors-total-badge" id="visitorsTotalBadge">0 visitas</span>
                 <button class="btn btn-outline btn-small" id="visitorsRefreshBtn" type="button">
-                  <i class="fa-solid fa-arrows-rotate"></i>
-                  Atualizar
+                  <i class="fa-solid fa-arrows-rotate"></i> Atualizar
                 </button>
               </div>
             </div>
 
             <!-- Stat cards -->
-            <div class="resumo-cards-grid" style="margin-bottom: 20px">
+            <div class="resumo-cards-grid" style="margin-bottom:20px;">
               <div class="resumo-card resumo-card--blue">
                 <div class="resumo-card-icon"><i class="fa-solid fa-users"></i></div>
                 <div>
@@ -537,29 +532,11 @@
 
             <!-- Tabela de visitantes -->
             <div class="resumo-section-card">
-              <div
-                class="resumo-section-title"
-                id="visitorsTableToggle"
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  cursor: pointer;
-                  user-select: none;
-                "
-              >
-                <span>
-                  <i class="fa-solid fa-table-list"></i>
-                  Histórico de Acessos
-                </span>
-                <span
-                  id="visitorsTableToggleIcon"
-                  style="font-size: 14px; transition: transform 0.2s"
-                >
-                  ▼
-                </span>
+              <div class="resumo-section-title" id="visitorsTableToggle" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;">
+                <span><i class="fa-solid fa-table-list"></i> Histórico de Acessos</span>
+                <span id="visitorsTableToggleIcon" style="font-size:14px;transition:transform 0.2s;">▼</span>
               </div>
-              <div id="visitorsTableWrapper" style="overflow-x: auto">
+              <div id="visitorsTableWrapper" style="overflow-x:auto;">
                 <table class="visitors-table">
                   <thead>
                     <tr>
@@ -648,20 +625,14 @@
     </div>
 
     <!-- Modal Seleção de Horário — Mobile only -->
-    <div
-      class="modal-overlay"
-      id="mobileHoursModalOverlay"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="mobileHoursModalTitle"
-    >
+    <div class="modal-overlay" id="mobileHoursModalOverlay" role="dialog" aria-modal="true" aria-labelledby="mobileHoursModalTitle">
       <div class="modal">
         <button class="modal-close" id="mobileHoursModalClose" aria-label="Fechar">
           <i class="fa-solid fa-xmark" aria-hidden></i>
         </button>
         <h2 class="modal-title" id="mobileHoursModalTitle">Escolha o Horário</h2>
         <div class="selected-date-display" id="mobileHoursDateDisplay"></div>
-        <div id="mobileHoursGrid" class="hours-grid" style="margin-top: 20px"></div>
+        <div id="mobileHoursGrid" class="hours-grid" style="margin-top:20px;"></div>
       </div>
     </div>
 
@@ -689,7 +660,66 @@
     <!-- Footer -->
 
     <!-- CSS do painel de visitantes (escopo local para não poluir design.css) -->
-    <style></style>
+    <style>
+      .visitors-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .visitors-table th {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+        color: var(--muted);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .visitors-table td {
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+        vertical-align: top;
+      }
+      .visitors-table tr:last-child td { border-bottom: none; }
+      .visitors-table tr:hover td { background: var(--surface-hover, rgba(0,0,0,.03)); }
+      .vis-col-ua { max-width: 240px; }
+      .vis-ua-text {
+        max-width: 240px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+      }
+      .vis-page-url {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        color: var(--accent);
+        font-size: 12px;
+      }
+      .visitors-empty {
+        text-align: center;
+        color: var(--muted);
+        padding: 32px 0;
+      }
+      .visitors-total-badge {
+        background: var(--accent);
+        color: #fff;
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .vis-ip-badge {
+        font-family: monospace;
+        font-size: 12px;
+        background: var(--surface-2, rgba(0,0,0,.06));
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+    </style>
 
     <script>
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -882,8 +912,7 @@
 
         if (calendarSection) calendarSection.classList.toggle("hidden", page !== "agendar");
         // Lista fica visível em "agendar" e "lista", oculta em resumo/visitors
-        if (listWrapper)
-          listWrapper.classList.toggle("hidden", page === "resumo" || page === "visitors");
+        if (listWrapper) listWrapper.classList.toggle("hidden", page === "resumo" || page === "visitors");
         if (resumoPage) resumoPage.classList.toggle("hidden", page !== "resumo");
         if (visitorsPage) visitorsPage.classList.toggle("hidden", page !== "visitors");
         if (bookingActions) bookingActions.classList.toggle("hidden", page !== "agendar");
@@ -910,10 +939,8 @@
         });
 
         if (page === "resumo") renderResumo();
-        else if (page === "visitors") {
-          _applyVisitorsTableState();
-          renderVisitors();
-        } else updateAppointmentsList();
+        else if (page === "visitors") { _applyVisitorsTableState(); renderVisitors(); }
+        else updateAppointmentsList();
 
         closeMobileSidebar();
       }
@@ -953,6 +980,7 @@
           const lsKey = `lastVisit_${ip}`;
           const lastTs = parseInt(localStorage.getItem(lsKey) || "0", 10);
           if (Date.now() - lastTs < 30 * 60 * 1000) {
+            console.debug("[trackVisitor] visita ignorada (mesmo IP < 30min)", { ip });
             return;
           }
           localStorage.setItem(lsKey, String(Date.now()));
@@ -967,6 +995,8 @@
             isMobile,
             accessedAt: firebase.firestore.FieldValue.serverTimestamp(),
           });
+
+          console.debug("[trackVisitor] visita registrada", { ip, country, city });
         } catch (err) {
           // Silencioso: erros de tracking não devem quebrar a página
           console.warn("[trackVisitor] Não foi possível registrar visita:", err.message);
@@ -982,10 +1012,7 @@
 
       /** Pausa o listener sem limpar dados/badge — usado no modo leve */
       function _pauseVisitorsListener() {
-        if (_unsubVisitors) {
-          _unsubVisitors();
-          _unsubVisitors = null;
-        }
+        if (_unsubVisitors) { _unsubVisitors(); _unsubVisitors = null; }
       }
 
       /** Aplica o estado visual de minimizado/maximizado na tabela */
@@ -1026,10 +1053,7 @@
       }
 
       function stopListeningToVisitors() {
-        if (_unsubVisitors) {
-          _unsubVisitors();
-          _unsubVisitors = null;
-        }
+        if (_unsubVisitors) { _unsubVisitors(); _unsubVisitors = null; }
         _visitorsData = [];
         const badge = document.getElementById("navVisitorsBadge");
         if (badge) badge.textContent = "0";
@@ -1075,10 +1099,9 @@
 
         tbody.innerHTML = data
           .map((v) => {
-            const ts =
-              v.accessedAt && v.accessedAt.toDate
-                ? v.accessedAt.toDate().toLocaleString("pt-BR")
-                : "—";
+            const ts = v.accessedAt && v.accessedAt.toDate
+              ? v.accessedAt.toDate().toLocaleString("pt-BR")
+              : "—";
             const flag = v.country ? `&#127462;` : ""; // placeholder; sem dep. externa
             return `
               <tr>
@@ -1086,9 +1109,9 @@
                 <td><span class="vis-ip-badge">${escHtml(v.ip || "—")}</span></td>
                 <td style="font-size:12px;">${escHtml(v.country || "—")}</td>
                 <td style="font-size:12px;">${escHtml(v.city || "—")}</td>
-                <td><span class="vis-page-url" title="${escHtml(v.page || "")}">${escHtml(
-                  (v.page || "").replace(/^https?:\/\/[^/]+/, "") || "/",
-                )}</span></td>
+                <td><span class="vis-page-url" title="${escHtml(v.page || "")}">${
+                  escHtml((v.page || "").replace(/^https?:\/\/[^/]+/, "") || "/")
+                }</span></td>
                 <td class="vis-col-ua"><span class="vis-ua-text" title="${escHtml(v.userAgent || "")}">${escHtml(v.userAgent || "—")}</span></td>
               </tr>`;
           })
@@ -1427,14 +1450,13 @@
 
       function handleAdminLogin() {
         const emailVal = (document.getElementById("adminEmailInput") || {}).value || "";
-        const passVal = (document.getElementById("adminPasswordInput") || {}).value || "";
+        const passVal  = (document.getElementById("adminPasswordInput") || {}).value || "";
         const loginBtn = document.getElementById("adminLoginBtn");
-        const errEl = document.getElementById("adminLoginError");
+        const errEl    = document.getElementById("adminLoginError");
 
         // SEGURANÇA: autenticação via Firebase Auth (servidor) — sem senha no cliente
         setButtonLoading(loginBtn, true, "Entrando...");
-        auth
-          .signInWithEmailAndPassword(emailVal.trim(), passVal)
+        auth.signInWithEmailAndPassword(emailVal.trim(), passVal)
           .then(() => {
             // onAuthStateChanged cuida de atualizar isAdmin, UI e navegação
           })
@@ -1446,10 +1468,7 @@
               setTimeout(() => errEl.classList.add("hidden"), 4000);
             }
             const passInput = document.getElementById("adminPasswordInput");
-            if (passInput) {
-              passInput.value = "";
-              passInput.focus();
-            }
+            if (passInput) { passInput.value = ""; passInput.focus(); }
           })
           .finally(() => setButtonLoading(loginBtn, false));
       }
@@ -2445,9 +2464,7 @@
         document.getElementById("appointmentForm").addEventListener("submit", handleFormSubmit);
 
         // Modal de horários mobile
-        document
-          .getElementById("mobileHoursModalClose")
-          .addEventListener("click", closeMobileHoursModal);
+        document.getElementById("mobileHoursModalClose").addEventListener("click", closeMobileHoursModal);
         document.getElementById("mobileHoursModalOverlay").addEventListener("click", (e) => {
           if (e.target.id === "mobileHoursModalOverlay") closeMobileHoursModal();
         });
