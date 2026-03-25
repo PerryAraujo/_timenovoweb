@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovoWeb Time — Em Manutenção</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background: #000;
+      }
+      img {
+        display: block;
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+        object-position: center;
+      }
+      .desktop {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        .mobile {
+          display: none;
+        }
+        .desktop {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img class="mobile" src="404(story).png" alt="Estamos fora do ar" />
+    <img class="desktop" src="404.png" alt="Estamos fora do ar" />
+  </body>
+</html>
